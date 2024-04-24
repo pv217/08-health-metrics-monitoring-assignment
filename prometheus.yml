@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 2s
+
+scrape_configs:
+  - job_name: 'quarkus'
+    metrics_path: '/q/metrics'
+    static_configs:
+      - targets: ['flight-service:8079', 'passenger-service:8078', 'baggage-service:8077']
+        labels:
+          group: 'quarkus-apps'

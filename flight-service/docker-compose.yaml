@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  flight-service:
+      build:
+        context: .
+        dockerfile: src/main/docker/Dockerfile.jvm
+      ports:
+      - "8079:8079" # Expose app on port 8079 to the outside world
+      environment:
+        # Database connection settings for the application
+        QUARKUS_DATASOURCE_DB_KIND: postgresql
+        QUARKUS_DATASOURCE_USERNAME: user
+        QUARKUS_DATASOURCE_PASSWORD: password
+        QUARKUS_DATASOURCE_REACTIVE_URL: vertx-reactive:postgresql://db:5432/flight-database
+        # Ensure to use the service name 'db' as the hostname in the URL
+      depends_on:
+        - db
+      networks:
+        - app-network
+
+  db:
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: flight-database
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # Define your custom networks
+networks:
+  app-network:
+      driver: bridge
+
+  # Define your volumes
+volumes:
+  db-data:

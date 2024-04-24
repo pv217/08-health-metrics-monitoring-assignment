@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "cz.muni.fi.airportmanager.proto";
+option java_outer_classname = "FlightCancellationProto";
+
+package grpc;
+
+service FlightCancellation {
+    rpc CancelFlight(FlightCancellationRequest) returns (FlightCancellationResponse) {}
+}
+
+message FlightCancellationRequest {
+    int32 id = 1;
+    string reason = 2;
+}
+
+enum FlightCancellationResponseStatus
+{
+    Cancelled = 0;
+    Error = 1;
+}
+
+message FlightCancellationResponse {
+    FlightCancellationResponseStatus status = 1;
+}

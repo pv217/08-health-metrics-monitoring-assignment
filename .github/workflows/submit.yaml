@@ -1,0 +1,19 @@
+name: Submission
+on:
+  pull_request:
+    types: [labeled]
+jobs:
+  submit:
+    name: Submit
+    if: ${{ github.event.label.name == 'Submitted' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Run the Maven verify phase
+        run: cd flight-service && mvn clean install && cd ../passenger-service && mvn clean install && cd ../baggage-service && mvn clean install
